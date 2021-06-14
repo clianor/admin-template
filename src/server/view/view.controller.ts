@@ -7,9 +7,21 @@ import { ViewService } from './view.service';
 export class ViewController {
   constructor(private viewService: ViewService) {}
 
+  async handler(req: Request, res: Response) {
+    await this.viewService
+      .getNextServer()
+      .render(req, res, req.url, req.query as any);
+  }
+
   @Get('*')
-  static(@Req() req: Request, @Res() res: Response) {
-    const handle = this.viewService.getNextServer().getRequestHandler();
-    handle(req, res);
+  public async showHome(@Req() req: Request, @Res() res: Response) {
+    await this.handler(req, res);
+  }
+
+  @Get('_next*')
+  public async assets(@Req() req: Request, @Res() res: Response) {
+    await this.viewService
+      .getNextServer()
+      .render(req, res, req.url, req.query as any);
   }
 }

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ViewModule } from './view/view.module';
+import { AppModule } from '@server/module/app.module';
+import { ViewModule } from '@server/view/view.module';
 
 @Module({
-  imports: [ViewModule],
+  imports: [AppModule, ViewModule],
 })
 export class MainModule {}
