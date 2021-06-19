@@ -24,7 +24,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "preci": "rimraf node_modules",
-    "ci": "yarn install --frozen-lockfile && lerna run ci --parallel"
+    "ci": "yarn install --frozen-lockfile && lerna run ci --parallel",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
@@ -66,6 +67,7 @@
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^6.0.0",
     "jest": "^26.6.3",
     "postcss": "^8.3.4",
     "prettier": "^2.2.1",
