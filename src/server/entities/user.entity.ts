@@ -1,13 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/common/core.entity';
 import { IsEmail, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
 
+@InputType('UserInputType')
 @ObjectType()
 @Entity()
-export class UserEntity extends CoreEntity {
+export class User extends CoreEntity {
   @IsEmail()
   @Field(() => String)
   @Column({ unique: true })
@@ -33,8 +34,7 @@ export class UserEntity extends CoreEntity {
 
   async checkPassword(aPassword: string): Promise<boolean> {
     try {
-      const ok = await bcrypt.compare(aPassword, this.password);
-      return ok;
+      return await bcrypt.compare(aPassword, this.password);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();
