@@ -11,7 +11,7 @@
     "prebuild": "rimraf dist && rimraf ./src/client/.next && rimraf ./src/client/styles/styles.css",
     "build": "cross-env NODE_ENV=production nest build && yarn run tailwind:prodbuild && cd src/client && next build",
     "tailwind:prodbuild": "cross-env NODE_ENV=production yarn run tailwind:build",
-    "tailwind:build": "tailwind build ./src/client/styles/tailwind.css -o ./src/client/styles/styles.css",
+    "tailwind:build": "tailwind build -i ./src/client/styles/tailwind.css -o ./src/client/styles/styles.css",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=production node dist/main.js",
     "prestart:dev": "yarn run tailwind:build",
