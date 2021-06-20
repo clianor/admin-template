@@ -4,6 +4,8 @@ import * as session from 'express-session';
 import * as MySQLStore from 'express-mysql-session';
 import { MainModule } from './main.module';
 
+declare const module: any;
+
 (async function () {
   const Store = MySQLStore(session);
 
@@ -24,4 +26,9 @@ import { MainModule } from './main.module';
     }),
   );
   await app.listen(3000);
+
+  if (module.hot && process.env.NODE_ENV !== 'production') {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 })();

@@ -36,6 +36,7 @@ import { AuthModule } from '@server/module/auth/auth.module';
       logging: process.env.NODE_ENV !== 'production',
       synchronize: process.env.NODE_ENV !== 'production',
       entities: [User],
+      keepConnectionAlive: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
