@@ -1,8 +1,8 @@
 import {
   HttpException,
-  HttpStatus,
   Injectable,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -44,13 +44,10 @@ export class UsersService {
         throw error;
       }
 
-      throw new HttpException(
-        {
-          ok: false,
-          error: '유저 생성에 실패했습니다.',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '유저 생성에 실패했습니다.',
+      });
     }
   }
 
@@ -71,13 +68,10 @@ export class UsersService {
         totalResults,
       };
     } catch {
-      throw new HttpException(
-        {
-          ok: false,
-          error: '유저를 가져우는데 실패했습니다.',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '유저를 가져우는데 실패했습니다.',
+      });
     }
   }
 }

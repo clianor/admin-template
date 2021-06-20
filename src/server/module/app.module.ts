@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@server/entities/user.entity';
 import { UsersModule } from '@server/module/users/users.module';
+import { AuthModule } from '@server/module/auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from '@server/module/users/users.module';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        PRIVATE_KEY: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -38,8 +40,13 @@ import { UsersModule } from '@server/module/users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       debug: process.env.NODE_ENV !== 'production',
-      playground: process.env.NODE_ENV !== 'production',
+      playground: process.env.NODE_ENV !== 'production' && {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
     }),
+    AuthModule,
     UsersModule,
   ],
 })
