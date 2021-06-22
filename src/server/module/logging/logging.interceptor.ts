@@ -1,0 +1,73 @@
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { cloneDeepWith } from 'lodash';
+import { Logging } from '@server/entities/logging.entity';
+import { deepOmit } from '@server/common/utils';
+
+@Injectable()
+export class LoggingInterceptor implements NestInterceptor {
+  constructor(
+    private configService: ConfigService,
+    @InjectRepository(Logging)
+    private readonly loggingRepository: Repository<Logging>,
+  ) {}
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const node_env = this.configService.get('NODE_ENV');
+
+    const { contextType, args } = context as any;
+    const inputArgs = cloneDeepWith(args[1]);
+    const omittedInputArgs = deepOmit(inputArgs, 'password');
+    const { session } = args[2].req;
+
+    return next.handle().pipe(
+      tap(
+        (response) => {
+          this.loggingRepository
+            .save(
+              this.loggingRepository.create({
+                contextType,
+                inputArgs: JSON.stringify(omittedInputArgs),
+                responseStatus: null,
+                response: JSON.stringify(response),
+                user: session.user,
+              }),
+            )
+            .catch((e) => {
+              if (node_env !== 'production') {
+                console.error('logging error: ', e);
+              }
+            });
+        },
+        (error) => {
+          const { status, response } = error;
+
+          this.loggingRepository
+            .save(
+              this.loggingRepository.create({
+                contextType,
+                inputArgs: JSON.stringify(omittedInputArgs),
+                responseStatus: status,
+                response: JSON.stringify(response),
+                user: session.user,
+              }),
+            )
+            .catch((e) => {
+              if (node_env !== 'production') {
+                console.error('logging error: ', e);
+              }
+            });
+        },
+      ),
+    );
+  }
+}

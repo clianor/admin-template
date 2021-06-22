@@ -106,7 +106,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/server/module/auth/auth.resolver.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/server/module/auth/auth.resolver.ts:10</a></div>
                             </td>
                         </tr>
 
@@ -179,8 +179,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="11"
-                            class="link-to-prism">src/server/module/auth/auth.resolver.ts:11</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="14"
+                            class="link-to-prism">src/server/module/auth/auth.resolver.ts:14</a></div>
                 </td>
             </tr>
 
@@ -239,9 +239,12 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { User } from &#x27;@server/entities/user.entity&#x27;;
 import { Args, Mutation, Resolver } from &#x27;@nestjs/graphql&#x27;;
+import { UseInterceptors } from &#x27;@nestjs/common&#x27;;
 import { AuthService } from &#x27;@server/module/auth/auth.service&#x27;;
 import { LoginInput, LoginOutput } from &#x27;@server/module/auth/dtos/login.dto&#x27;;
+import { LoggingInterceptor } from &#x27;@server/module/logging/logging.interceptor&#x27;;
 
+@UseInterceptors(LoggingInterceptor)
 @Resolver(() &#x3D;&gt; User)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}

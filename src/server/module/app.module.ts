@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@server/entities/user.entity';
 import { UsersModule } from '@server/module/users/users.module';
 import { AuthModule } from '@server/module/auth/auth.module';
+import { Logging } from '@server/entities/logging.entity';
 
 @Module({
   imports: [
@@ -35,8 +36,9 @@ import { AuthModule } from '@server/module/auth/auth.module';
       database: process.env.DB_NAME,
       logging: process.env.NODE_ENV !== 'production',
       synchronize: process.env.NODE_ENV !== 'production',
-      entities: [User],
+      entities: [User, Logging],
       keepConnectionAlive: true,
+      autoLoadEntities: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

@@ -170,11 +170,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
 import { TypeOrmModule } from &#x27;@nestjs/typeorm&#x27;;
 import { User } from &#x27;@server/entities/user.entity&#x27;;
+import { Logging } from &#x27;@server/entities/logging.entity&#x27;;
 import { AuthResolver } from &#x27;@server/module/auth/auth.resolver&#x27;;
 import { AuthService } from &#x27;@server/module/auth/auth.service&#x27;;
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([Logging, User])],
   providers: [AuthResolver, AuthService],
   exports: [AuthService],
 })

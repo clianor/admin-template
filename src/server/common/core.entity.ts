@@ -10,9 +10,9 @@ import {
 @ObjectType()
 class CoreEntity {
   @IsNumber()
-  @Field(() => Number)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @IsDate()
   @Field(() => Date)

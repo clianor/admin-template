@@ -165,6 +165,7 @@ import { TypeOrmModule } from &#x27;@nestjs/typeorm&#x27;;
 import { User } from &#x27;@server/entities/user.entity&#x27;;
 import { UsersModule } from &#x27;@server/module/users/users.module&#x27;;
 import { AuthModule } from &#x27;@server/module/auth/auth.module&#x27;;
+import { Logging } from &#x27;@server/entities/logging.entity&#x27;;
 
 @Module({
   imports: [
@@ -194,8 +195,9 @@ import { AuthModule } from &#x27;@server/module/auth/auth.module&#x27;;
       database: process.env.DB_NAME,
       logging: process.env.NODE_ENV !&#x3D;&#x3D; &#x27;production&#x27;,
       synchronize: process.env.NODE_ENV !&#x3D;&#x3D; &#x27;production&#x27;,
-      entities: [User],
+      entities: [User, Logging],
       keepConnectionAlive: true,
+      autoLoadEntities: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

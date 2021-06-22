@@ -65,13 +65,13 @@
 <title>cluster_UsersModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="170,-70 170,-268 326,-268 326,-70 170,-70"/>
 </g>
-<g id="clust6" class="cluster">
-<title>cluster_UsersModule_providers</title>
-<polygon fill="none" stroke="black" points="178,-78 178,-130 318,-130 318,-78 178,-78"/>
-</g>
 <g id="clust4" class="cluster">
 <title>cluster_UsersModule_exports</title>
 <polygon fill="none" stroke="black" points="193,-208 193,-260 303,-260 303,-208 193,-208"/>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_UsersModule_providers</title>
+<polygon fill="none" stroke="black" points="178,-78 178,-130 318,-130 318,-78 178,-78"/>
 </g>
 <!-- UsersService  -->
 <g id="node1" class="node">
@@ -170,11 +170,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
 import { TypeOrmModule } from &#x27;@nestjs/typeorm&#x27;;
 import { User } from &#x27;@server/entities/user.entity&#x27;;
+import { Logging } from &#x27;@server/entities/logging.entity&#x27;;
 import { UsersResolver } from &#x27;@server/module/users/users.resolver&#x27;;
 import { UsersService } from &#x27;@server/module/users/users.service&#x27;;
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([Logging, User])],
   providers: [UsersResolver, UsersService],
   exports: [UsersService],
 })
