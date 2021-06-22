@@ -23,6 +23,10 @@ export class Logging extends CoreEntity {
   @Column({ nullable: true })
   response?: string;
 
+  @IsString()
+  @Column({ nullable: true })
+  accessIP?: string;
+
   @ManyToOne(() => User, (user) => user.id, {
     nullable: true,
     onDelete: 'CASCADE',

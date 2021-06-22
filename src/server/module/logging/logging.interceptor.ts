@@ -23,19 +23,26 @@ export class LoggingInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const node_env = this.configService.get('NODE_ENV');
+    const now = Date.now();
 
     const { contextType, args } = context as any;
+
     const inputArgs = cloneDeepWith(args[1]);
     const omittedInputArgs = deepOmit(inputArgs, 'password');
-    const { session } = args[2].req;
+
+    const { originalUrl, session, headers, socket } = args[2].req;
+    const ip = headers['x-forwarded-for'] || socket.remoteAddress;
 
     return next.handle().pipe(
       tap(
         (response) => {
+          console.log(`After... ${originalUrl} ${Date.now() - now}ms`);
+
           this.loggingRepository
             .save(
               this.loggingRepository.create({
                 contextType,
+                accessIP: ip,
                 inputArgs: JSON.stringify(omittedInputArgs),
                 responseStatus: null,
                 response: JSON.stringify(response),
@@ -49,12 +56,14 @@ export class LoggingInterceptor implements NestInterceptor {
             });
         },
         (error) => {
+          console.log(`After... ${originalUrl} ${Date.now() - now}ms`);
           const { status, response } = error;
 
           this.loggingRepository
             .save(
               this.loggingRepository.create({
                 contextType,
+                accessIP: ip,
                 inputArgs: JSON.stringify(omittedInputArgs),
                 responseStatus: status,
                 response: JSON.stringify(response),
