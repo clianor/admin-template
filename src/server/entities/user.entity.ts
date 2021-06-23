@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/common/core.entity';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsIP, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -18,6 +18,11 @@ export class User extends CoreEntity {
   @Field(() => String)
   @Column({ select: false })
   password: string;
+
+  @IsIP()
+  @Field(() => String)
+  @Column({ length: 50 })
+  accessIP: string;
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -6,11 +6,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from '@server/entities/user.entity';
 import { LoginInput, LoginOutput } from '@server/module/auth/dtos/login.dto';
-import { Repository } from 'typeorm';
-import { CONTEXT } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +36,7 @@ export class AuthService {
         {
           email,
         },
-        { select: ['id', 'password'] },
+        { select: ['id', 'password', 'accessIP'] },
       );
       if (!user) {
         throw new NotFoundException({
@@ -50,6 +50,19 @@ export class AuthService {
         throw new UnauthorizedException({
           ok: false,
           error: '잘못된 패스워드입니다',
+        });
+      }
+
+      const { headers, socket } = this.context.req;
+      let ip = headers['x-forwarded-for'] || socket.remoteAddress;
+      if (ip.substr(0, 7) === '::ffff:') {
+        ip = ip.substr(7);
+      }
+
+      if (user.accessIP !== ip) {
+        throw new UnauthorizedException({
+          ok: false,
+          error: '허용되지 않은 IP입니다.',
         });
       }
 
