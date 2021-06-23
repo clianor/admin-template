@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@server/entities/user.entity';
 import { LoginInput, LoginOutput } from '@server/module/auth/dtos/login.dto';
+import { LogoutOutput } from '@server/module/auth/dtos/logout.dto';
 
 @Injectable()
 export class AuthService {
@@ -78,5 +79,19 @@ export class AuthService {
         error: '로그인에 실패했습니다.',
       });
     }
+  }
+
+  async logout(): Promise<LogoutOutput> {
+    if (this.session.user) {
+      this.session.destroy();
+      return {
+        ok: true,
+      };
+    }
+
+    throw new UnauthorizedException({
+      ok: false,
+      error: '로그인된 상태가 아닙니다.',
+    });
   }
 }

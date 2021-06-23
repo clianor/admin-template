@@ -12,6 +12,10 @@ export class Logging extends CoreEntity {
   contextType: string;
 
   @IsString()
+  @Column({ nullable: true, default: '' })
+  fieldName?: string;
+
+  @IsString()
   @Column({ nullable: true })
   inputArgs?: string;
 

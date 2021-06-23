@@ -31,6 +31,8 @@ export class LoggingInterceptor implements NestInterceptor {
     const omittedInputArgs = deepOmit(inputArgs, 'password');
 
     const { originalUrl, session, headers, socket } = args[2].req;
+    const { fieldName } = args[3];
+
     let ip = headers['x-forwarded-for'] || socket.remoteAddress;
     if (ip.substr(0, 7) === '::ffff:') {
       ip = ip.substr(7);
@@ -46,6 +48,7 @@ export class LoggingInterceptor implements NestInterceptor {
               this.loggingRepository.create({
                 contextType,
                 accessIP: ip,
+                fieldName,
                 inputArgs: JSON.stringify(omittedInputArgs),
                 responseStatus: null,
                 response: JSON.stringify(response),
@@ -67,6 +70,7 @@ export class LoggingInterceptor implements NestInterceptor {
               this.loggingRepository.create({
                 contextType,
                 accessIP: ip,
+                fieldName,
                 inputArgs: JSON.stringify(omittedInputArgs),
                 responseStatus: status,
                 response: JSON.stringify(response),
