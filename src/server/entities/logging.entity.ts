@@ -5,7 +5,11 @@ import { User } from '@server/entities/user.entity';
 import { IsNumber, IsString } from 'class-validator';
 
 @ObjectType()
-@Entity()
+@Entity({
+  orderBy: {
+    createdAt: 'DESC',
+  },
+})
 export class Logging extends CoreEntity {
   @IsString()
   @Column()
