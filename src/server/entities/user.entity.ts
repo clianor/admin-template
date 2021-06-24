@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/common/core.entity';
-import { IsEmail, IsIP, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -21,8 +21,23 @@ export class User extends CoreEntity {
 
   @IsIP()
   @Field(() => String)
-  @Column({ length: 50 })
-  accessIP: string;
+  @Column({ length: 50, nullable: true })
+  accessIP?: string;
+
+  @IsDate()
+  @Field(() => Date)
+  @Column('datetime', { nullable: true })
+  lastLoginedAt?: Date;
+
+  @IsNumber()
+  @Field(() => Number)
+  @Column({ default: 0 })
+  loginFailCount: number;
+
+  @IsDate()
+  @Field(() => Date)
+  @Column('datetime', { nullable: true })
+  loginBlockedAt?: Date;
 
   @BeforeInsert()
   @BeforeUpdate()
