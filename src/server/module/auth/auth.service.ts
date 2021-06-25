@@ -9,6 +9,7 @@ import {
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { cloneDeep } from 'lodash';
 import { User } from '@server/entities/user.entity';
 import { LoginInput, LoginOutput } from '@server/module/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/module/auth/dtos/logout.dto';
@@ -37,7 +38,16 @@ export class AuthService {
         {
           email,
         },
-        { select: ['id', 'password', 'accessIP'] },
+        {
+          select: [
+            'id',
+            'password',
+            'accessIP',
+            'loginFailCount',
+            'lastLoginedAt',
+            'loginBlockedAt',
+          ],
+        },
       );
       if (!user) {
         throw new NotFoundException({
@@ -46,8 +56,34 @@ export class AuthService {
         });
       }
 
+      const now = new Date();
+      const thirtyMunituesAgo = cloneDeep(now);
+      thirtyMunituesAgo.setMinutes(thirtyMunituesAgo.getMinutes() - 30);
+
+      if (user.loginBlockedAt > thirtyMunituesAgo) {
+        throw new UnauthorizedException({
+          ok: false,
+          error: '30분동안 잠긴 계정입니다.',
+        });
+      }
+
       const passwordCorrect = await user.checkPassword(password);
       if (!passwordCorrect) {
+        if (user.loginBlockedAt) {
+          user.loginBlockedAt = null;
+          user.loginFailCount = 0;
+        }
+
+        user.loginFailCount = user.loginFailCount + 1;
+
+        if (user.loginFailCount >= 5) {
+          user.loginBlockedAt = now;
+        }
+
+        this.userRepository.save(user).catch((error) => {
+          console.error(error);
+        });
+
         throw new UnauthorizedException({
           ok: false,
           error: '잘못된 패스워드입니다',
@@ -66,6 +102,14 @@ export class AuthService {
           error: '허용되지 않은 IP입니다.',
         });
       }
+
+      if (user.loginFailCount > 0) {
+        user.loginFailCount = 0;
+      }
+      user.lastLoginedAt = now;
+      this.userRepository.save(user).catch((error) => {
+        console.error(error);
+      });
 
       this.session.user = user;
 
