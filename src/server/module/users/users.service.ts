@@ -3,6 +3,7 @@ import {
   Injectable,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,7 +12,14 @@ import {
   CreateUserInput,
   CreateUserOutput,
 } from '@server/module/users/dtos/create-user.dto';
-import { UsersInput, UsersOutput } from '@server/module/users/dtos/get-users';
+import {
+  GetUsersInput,
+  GetUsersOutput,
+} from '@server/module/users/dtos/get-users';
+import {
+  EditProfileInput,
+  EditProfileOutput,
+} from '@server/module/users/dtos/edit-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -51,7 +59,49 @@ export class UsersService {
     }
   }
 
-  async getUsers({ page, limit }: UsersInput): Promise<UsersOutput> {
+  async editProfile({
+    userId,
+    email,
+    password,
+    accessIP,
+  }: EditProfileInput): Promise<EditProfileOutput> {
+    try {
+      const user = await this.userRepository.findOne({ id: userId });
+      console.log(user);
+
+      if (!user) {
+        throw new NotFoundException({
+          ok: false,
+          error: '유저가 존재하지 않습니다.',
+        });
+      }
+
+      if (email) {
+        user.email = email;
+      }
+
+      if (password) {
+        user.password = password;
+      }
+
+      if (accessIP) {
+        user.accessIP = accessIP;
+      }
+
+      await this.userRepository.save(user);
+      return { ok: true };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '프로필 변경에 실패했습니다.',
+      });
+    }
+  }
+
+  async getUsers({ page, limit }: GetUsersInput): Promise<GetUsersOutput> {
     try {
       const [users, totalResults] = await this.userRepository.findAndCount({
         skip: (page - 1) * limit,
@@ -70,7 +120,7 @@ export class UsersService {
     } catch {
       throw new InternalServerErrorException({
         ok: false,
-        error: '유저를 가져우는데 실패했습니다.',
+        error: '유저를 가져오는데 실패했습니다.',
       });
     }
   }

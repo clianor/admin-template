@@ -40,7 +40,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(
-        (response) => {
+        () => {
           console.log(`After... ${originalUrl} ${Date.now() - now}ms`);
 
           this.loggingRepository
@@ -51,7 +51,6 @@ export class LoggingInterceptor implements NestInterceptor {
                 fieldName,
                 inputArgs: JSON.stringify(omittedInputArgs),
                 responseStatus: null,
-                response: JSON.stringify(response),
                 user: session.user,
               }),
             )

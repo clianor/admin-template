@@ -6,8 +6,15 @@ import {
   CreateUserInput,
   CreateUserOutput,
 } from '@server/module/users/dtos/create-user.dto';
-import { UsersInput, UsersOutput } from '@server/module/users/dtos/get-users';
+import {
+  GetUsersInput,
+  GetUsersOutput,
+} from '@server/module/users/dtos/get-users';
 import { LoggingInterceptor } from '@server/module/logging/logging.interceptor';
+import {
+  EditProfileInput,
+  EditProfileOutput,
+} from '@server/module/users/dtos/edit-profile.dto';
 
 @UseInterceptors(LoggingInterceptor)
 @Resolver(() => User)
@@ -21,8 +28,17 @@ export class UsersResolver {
     return this.usersService.createUser(createUserInput);
   }
 
-  @Query(() => UsersOutput)
-  getUsers(@Args('input') usersInput: UsersInput): Promise<UsersOutput> {
-    return this.usersService.getUsers(usersInput);
+  @Mutation(() => EditProfileOutput)
+  editProfile(
+    @Args('input') editProfileInput: EditProfileInput,
+  ): Promise<EditProfileOutput> {
+    return this.usersService.editProfile(editProfileInput);
+  }
+
+  @Query(() => GetUsersOutput)
+  getUsers(
+    @Args('input') getUsersInput: GetUsersInput,
+  ): Promise<GetUsersOutput> {
+    return this.usersService.getUsers(getUsersInput);
   }
 }
