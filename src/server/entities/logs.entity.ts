@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import CoreEntity from '@server/common/core.entity';
-import { User } from '@server/entities/user.entity';
+import CoreEntity from '@server/commons/core.entity';
+import { Users } from '@server/entities/users.entity';
 import { IsNumber, IsString } from 'class-validator';
 
 @ObjectType()
@@ -10,7 +10,7 @@ import { IsNumber, IsString } from 'class-validator';
     createdAt: 'DESC',
   },
 })
-export class Logging extends CoreEntity {
+export class Logs extends CoreEntity {
   @IsString()
   @Column()
   contextType: string;
@@ -35,9 +35,9 @@ export class Logging extends CoreEntity {
   @Column({ nullable: true })
   accessIP?: string;
 
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => Users, (user) => user.id, {
     nullable: true,
     onDelete: 'CASCADE',
   })
-  user?: User;
+  user?: Users;
 }

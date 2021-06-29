@@ -10,15 +10,15 @@ import { Repository } from 'typeorm';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { cloneDeepWith } from 'lodash';
-import { Logging } from '@server/entities/logging.entity';
-import { deepOmit } from '@server/common/utils';
+import { Logs } from '@server/entities/logs.entity';
+import { deepOmit } from '@server/commons/utils';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(
     private configService: ConfigService,
-    @InjectRepository(Logging)
-    private readonly loggingRepository: Repository<Logging>,
+    @InjectRepository(Logs)
+    private readonly loggingRepository: Repository<Logs>,
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

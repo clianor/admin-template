@@ -10,16 +10,16 @@ import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { cloneDeep } from 'lodash';
-import { User } from '@server/entities/user.entity';
-import { LoginInput, LoginOutput } from '@server/module/auth/dtos/login.dto';
-import { LogoutOutput } from '@server/module/auth/dtos/logout.dto';
+import { Users } from '@server/entities/users.entity';
+import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
+import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
 
 @Injectable()
 export class AuthService {
   private session: Record<string, any>;
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>,
     @Inject(CONTEXT) private context,
   ) {
     this.session = context.req.session;

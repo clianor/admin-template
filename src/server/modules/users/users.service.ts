@@ -6,18 +6,18 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '@server/entities/user.entity';
+import { Users } from '@server/entities/users.entity';
 import {
   CreateUserInput,
   CreateUserOutput,
-} from '@server/module/users/dtos/create-user.dto';
-import { UsersInput, UsersOutput } from '@server/module/users/dtos/get-users';
+} from '@server/modules/users/dtos/create-user.dto';
+import { UsersInput, UsersOutput } from '@server/modules/users/dtos/get-users';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>,
   ) {}
 
   async createUser({
