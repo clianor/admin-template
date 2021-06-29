@@ -56,14 +56,16 @@ export class AuthService {
         });
       }
 
-      const now = new Date();
-      const thirtyMunituesAgo = cloneDeep(now);
-      thirtyMunituesAgo.setMinutes(thirtyMunituesAgo.getMinutes() - 30);
+      const lockedMinutes = 30;
 
-      if (user.loginBlockedAt > thirtyMunituesAgo) {
+      const now = new Date();
+      const prevTimeAgo = cloneDeep(now);
+      prevTimeAgo.setMinutes(prevTimeAgo.getMinutes() - lockedMinutes);
+
+      if (user.loginBlockedAt > prevTimeAgo) {
         throw new UnauthorizedException({
           ok: false,
-          error: '30분동안 잠긴 계정입니다.',
+          error: `${prevTimeAgo}분동안 잠긴 계정입니다.`,
         });
       }
 

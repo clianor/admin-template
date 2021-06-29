@@ -25,8 +25,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "preci": "rimraf node_modules",
-    "ci": "yarn install --frozen-lockfile && lerna run ci --parallel",
+    "ci": "yarn install --frozen-lockfile",
     "postinstall": "husky install"
   },
   "dependencies": {

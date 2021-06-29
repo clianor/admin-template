@@ -6,10 +6,10 @@ import {
 import { Users } from '@server/entities/users.entity';
 
 @InputType()
-export class UsersInput extends PaginationInput {}
+export class GetUsersInput extends PaginationInput {}
 
 @ObjectType()
-export class UsersOutput extends PaginationOutput {
+export class GetUsersOutput extends PaginationOutput {
   @Field(() => [Users], { nullable: true })
   results?: Users[];
 }
