@@ -8,7 +8,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 @InputType('UserInputType')
 @ObjectType()
 @Entity()
-export class User extends CoreEntity {
+export class Users extends CoreEntity {
   @IsEmail()
   @Field(() => String)
   @Column({ unique: true })
@@ -18,11 +18,6 @@ export class User extends CoreEntity {
   @Field(() => String)
   @Column({ select: false })
   password: string;
-
-  @IsString()
-  @Field(() => String)
-  @Column({ select: false })
-  salt: string;
 
   @IsIP()
   @Field(() => String)

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@server/entities/user.entity';
-import { Logging } from '@server/entities/logging.entity';
-import { UsersResolver } from '@server/module/users/users.resolver';
-import { UsersService } from '@server/module/users/users.service';
+import { Users } from '@server/entities/users.entity';
+import { Logs } from '@server/entities/logs.entity';
+import { UsersResolver } from '@server/modules/users/users.resolver';
+import { UsersService } from '@server/modules/users/users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Logging, User])],
+  imports: [TypeOrmModule.forFeature([Logs, Users])],
   providers: [UsersResolver, UsersService],
   exports: [UsersService],
 })

@@ -1,16 +1,16 @@
-import { User } from '@server/entities/user.entity';
+import { Users } from '@server/entities/users.entity';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseInterceptors } from '@nestjs/common';
-import { UsersService } from '@server/module/users/users.service';
+import { UsersService } from '@server/modules/users/users.service';
 import {
   CreateUserInput,
   CreateUserOutput,
-} from '@server/module/users/dtos/create-user.dto';
-import { UsersInput, UsersOutput } from '@server/module/users/dtos/get-users';
-import { LoggingInterceptor } from '@server/module/logging/logging.interceptor';
+} from '@server/modules/users/dtos/create-user.dto';
+import { UsersInput, UsersOutput } from '@server/modules/users/dtos/get-users';
+import { LoggingInterceptor } from '@server/modules/logging/logging.interceptor';
 
 @UseInterceptors(LoggingInterceptor)
-@Resolver(() => User)
+@Resolver(() => Users)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
