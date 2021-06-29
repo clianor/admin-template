@@ -20,22 +20,22 @@ export class Users extends CoreEntity {
   password: string;
 
   @IsIP()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ length: 50, nullable: true })
   accessIP?: string;
 
   @IsDate()
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @Column('datetime', { nullable: true })
   lastLoginedAt?: Date;
 
   @IsNumber()
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ default: 0 })
   loginFailCount: number;
 
   @IsDate()
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @Column('datetime', { nullable: true })
   loginBlockedAt?: Date;
 

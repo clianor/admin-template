@@ -25,7 +25,7 @@ class CoreEntity {
   updatedAt: Date;
 
   @IsDate()
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @DeleteDateColumn()
   deletedAt: Date;
 }
