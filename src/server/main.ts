@@ -16,6 +16,11 @@ declare const module: any;
       secret: process.env.PRIVATE_KEY,
       resave: false,
       saveUninitialized: false,
+      rolling: true,
+      cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 30, // 30분으로 설정
+      },
       store: new Store({
         host: process.env.DB_HOST,
         port: +process.env.DB_PORT,
