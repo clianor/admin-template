@@ -1,0 +1,5 @@
+{
+  "cli": {
+    "entitiesDir": "src/server/entities"
+  }
+}

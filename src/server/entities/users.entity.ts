@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import CoreEntity from '@server/common/core.entity';
+import CoreEntity from '@server/commons/core.entity';
 import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
