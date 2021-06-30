@@ -9,7 +9,10 @@ export default TypeOrmModule.forRoot({
   database: process.env.DB_NAME,
   logging: process.env.NODE_ENV !== 'production',
   synchronize: process.env.NODE_ENV !== 'production',
-  entities: [`${__dirname}/entities/*`],
+  entities: [
+    process.env.NODE_ENV !== 'production'
+      ? 'dist/**/*.entity{.ts,.js}'
+      : 'src/**/*.entity{.ts,.js}',
+  ],
   keepConnectionAlive: true,
-  autoLoadEntities: true,
 });

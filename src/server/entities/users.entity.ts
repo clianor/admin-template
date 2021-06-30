@@ -1,9 +1,10 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
 import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
+import { AuthGroups } from '@server/entities/auth-groups.entity';
 
 @InputType('UserInputType')
 @ObjectType()
@@ -38,6 +39,12 @@ export class Users extends CoreEntity {
   @Field(() => Date, { nullable: true })
   @Column('datetime', { nullable: true })
   loginBlockedAt?: Date;
+
+  @Field(() => AuthGroups, { nullable: true })
+  @ManyToOne(() => AuthGroups, (authGroups) => authGroups.id, {
+    nullable: true,
+  })
+  authGroup?: AuthGroups;
 
   @BeforeInsert()
   @BeforeUpdate()
