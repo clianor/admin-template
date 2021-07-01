@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import * as helmet from 'helmet';
 import * as compression from 'compression';
 import * as session from 'express-session';
 import * as MySQLStore from 'express-mysql-session';
@@ -12,6 +13,9 @@ declare const module: any;
 
   const app = await NestFactory.create(MainModule);
   app.useGlobalPipes(new ValidationPipe());
+  if (process.env.NODE_ENV === 'production') {
+    app.use(helmet());
+  }
   app.use(compression());
   app.use(
     session({
