@@ -2,6 +2,7 @@ import { Controller, Get, Res, Req } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { ViewService } from './view.service';
+import { PreAuthorize } from '@server/modules/auth/auth.decorator';
 
 @Controller('/')
 export class ViewController {
@@ -27,6 +28,7 @@ export class ViewController {
     await this.handler(req, res);
   }
 
+  @PreAuthorize('Any')
   @Get('home')
   public async showHome(@Req() req: Request, @Res() res: Response) {
     const serverSideProps = { name: 'clianor' };
