@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import * as compression from 'compression';
 import * as session from 'express-session';
 import * as MySQLStore from 'express-mysql-session';
 import { MainModule } from './main.module';
@@ -11,6 +12,7 @@ declare const module: any;
 
   const app = await NestFactory.create(MainModule);
   app.useGlobalPipes(new ValidationPipe());
+  app.use(compression());
   app.use(
     session({
       secret: process.env.PRIVATE_KEY,
