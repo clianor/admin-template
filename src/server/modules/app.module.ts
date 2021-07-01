@@ -1,11 +1,9 @@
-import envConfig from '@server/configs/env.config';
-import ormConfig from '@server/configs/orm.config';
-import graphqlConfig from '@server/configs/graphql.config';
 import { Module } from '@nestjs/common';
-import { UsersModule } from '@server/modules/users/users.module';
+import { CommonModule } from '@server/modules/common/common.module';
 import { AuthModule } from '@server/modules/auth/auth.module';
+import { UsersModule } from '@server/modules/users/users.module';
 
 @Module({
-  imports: [envConfig, ormConfig, graphqlConfig, AuthModule, UsersModule],
+  imports: [CommonModule, AuthModule, UsersModule],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 
-const env = {
+export default ConfigModule.forRoot({
   isGlobal: true,
   envFilePath: '.env',
   ignoreEnvFile: process.env.NODE_ENV === 'production',
@@ -17,6 +17,4 @@ const env = {
     DB_NAME: Joi.string().required(),
     PRIVATE_KEY: Joi.string().required(),
   }),
-};
-
-export default ConfigModule.forRoot(env);
+});
