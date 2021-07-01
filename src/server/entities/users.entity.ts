@@ -16,7 +16,7 @@ export class Users extends CoreEntity {
   email: string;
 
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ select: false })
   password: string;
 
