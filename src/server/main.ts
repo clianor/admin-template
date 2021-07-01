@@ -4,6 +4,7 @@ import * as helmet from 'helmet';
 import * as compression from 'compression';
 import * as session from 'express-session';
 import * as MySQLStore from 'express-mysql-session';
+import * as csurf from 'csurf';
 import { MainModule } from './main.module';
 
 declare const module: any;
@@ -36,6 +37,7 @@ declare const module: any;
       }),
     }),
   );
+  app.use(csurf());
   await app.listen(3000);
 
   if (module.hot && process.env.NODE_ENV !== 'production') {
