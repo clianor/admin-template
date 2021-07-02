@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { cloneDeep } from 'lodash';
 import { Users } from '@server/entities/users.entity';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
+import { cloneDeep } from 'lodash';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {

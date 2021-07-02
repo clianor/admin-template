@@ -1,6 +1,6 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { CoreOutput } from './core.dto';
 import { IsInt, IsOptional, Min } from 'class-validator';
+import { CoreOutput } from './core.dto';
 
 @InputType()
 export class PaginationInput {

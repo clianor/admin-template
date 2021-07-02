@@ -84,6 +84,7 @@
     "jest-coverage-badges": "^1.1.2",
     "postcss": "^8.3.4",
     "prettier": "^2.2.1",
+    "prettier-plugin-organize-imports": "^2.2.0",
     "run-script-webpack-plugin": "^0.0.11",
     "supertest": "^6.1.3",
     "tailwindcss": "^2.1.4",

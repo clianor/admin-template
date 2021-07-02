@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
-import { Request } from 'express';
 import { AllowAuthorizeType } from '@server/modules/auth/auth.decorator';
+import { Request } from 'express';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

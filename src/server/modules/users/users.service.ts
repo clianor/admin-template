@@ -1,12 +1,11 @@
 import {
+  ConflictException,
   HttpException,
   Injectable,
-  ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Users } from '@server/entities/users.entity';
 import {
   CreateUserInput,
@@ -20,6 +19,7 @@ import {
   GetUsersInput,
   GetUsersOutput,
 } from '@server/modules/users/dtos/get-users';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {

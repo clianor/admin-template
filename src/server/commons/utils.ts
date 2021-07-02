@@ -1,4 +1,4 @@
-import { keyBy, transform, isObject } from 'lodash';
+import { isObject, keyBy, transform } from 'lodash';
 
 export const deepOmit = (obj, keysToOmit) => {
   const keysToOmitIndex = keyBy(

@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { deepOmit } from '@server/commons/utils';
+import { Logs } from '@server/entities/logs.entity';
+import { cloneDeepWith } from 'lodash';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { cloneDeepWith } from 'lodash';
-import { Logs } from '@server/entities/logs.entity';
-import { deepOmit } from '@server/commons/utils';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

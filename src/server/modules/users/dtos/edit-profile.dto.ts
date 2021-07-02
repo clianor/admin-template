@@ -5,9 +5,9 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
-import { Users } from '@server/entities/users.entity';
 import { CoreOutput } from '@server/commons/core.dto';
+import { Users } from '@server/entities/users.entity';
+import { IsString } from 'class-validator';
 
 @InputType()
 export class EditProfileInput extends PartialType(

@@ -1,8 +1,8 @@
 import { ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
 import CoreEntity from '@server/commons/core.entity';
 import { Users } from '@server/entities/users.entity';
 import { IsNumber, IsString } from 'class-validator';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @ObjectType()
 @Entity({

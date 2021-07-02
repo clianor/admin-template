@@ -1,9 +1,9 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
+import { AuthGroupRoles } from '@server/entities/auth-group-roles.entity';
+import { Users } from '@server/entities/users.entity';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
-import { Users } from '@server/entities/users.entity';
-import { AuthGroupRoles } from '@server/entities/auth-group-roles.entity';
 
 @InputType('AuthGroupInputType')
 @ObjectType()

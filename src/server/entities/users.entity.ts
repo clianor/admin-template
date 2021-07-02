@@ -1,10 +1,10 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
+import { AuthGroups } from '@server/entities/auth-groups.entity';
+import * as bcrypt from 'bcryptjs';
 import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { InternalServerErrorException } from '@nestjs/common';
-import { AuthGroups } from '@server/entities/auth-groups.entity';
 
 @InputType('UserInputType')
 @ObjectType()

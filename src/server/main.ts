@@ -1,10 +1,10 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import * as helmet from 'helmet';
+import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
-import * as session from 'express-session';
-import * as MySQLStore from 'express-mysql-session';
 import * as csurf from 'csurf';
+import * as MySQLStore from 'express-mysql-session';
+import * as session from 'express-session';
+import * as helmet from 'helmet';
 import { MainModule } from './main.module';
 
 declare const module: any;
