@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
-import * as csurf from 'csurf';
+import * as cookieParser from 'cookie-parser';
 import * as MySQLStore from 'express-mysql-session';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
@@ -17,6 +17,7 @@ declare const module: any;
   if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
   }
+  app.use(cookieParser());
   app.use(compression());
   app.use(
     session({
@@ -37,7 +38,6 @@ declare const module: any;
       }),
     }),
   );
-  app.use(csurf());
   await app.listen(3000);
 
   if (module.hot && process.env.NODE_ENV !== 'production') {
