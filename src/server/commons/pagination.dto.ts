@@ -7,13 +7,13 @@ export class PaginationInput {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Field(() => Int, { defaultValue: 1 })
+  @Field(() => Int, { nullable: true, defaultValue: 1 })
   page: number;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Field(() => Int, { defaultValue: 25 })
+  @Field(() => Int, { nullable: true, defaultValue: 25 })
   limit: number;
 }
 

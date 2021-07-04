@@ -22,15 +22,15 @@ export class AuthGroups extends CoreEntity {
 
   @IsOptional()
   @IsInt()
-  @Field(() => Number, { nullable: true })
-  @Column()
-  level?: number;
+  @Field(() => Number, { nullable: true, defaultValue: 999 })
+  @Column({ default: 999 })
+  level: number;
 
   @Field(() => [Users])
   @OneToMany(() => Users, (users) => users.authGroup)
   users: Users[];
 
-  @Field(() => [AuthGroupRoles])
+  @Field(() => [AuthGroupRoles], { nullable: true, defaultValue: [] })
   @ManyToMany(
     () => AuthGroupRoles,
     (authGroupRoles) => authGroupRoles.authGroup,

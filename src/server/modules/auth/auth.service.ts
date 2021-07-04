@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   HttpException,
   Inject,
   Injectable,
@@ -8,7 +9,12 @@ import {
 } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { Users } from '@server/entities/users.entity';
+import {
+  CreateAuthGroupInput,
+  CreateAuthGroupOutput,
+} from '@server/modules/auth/dtos/create-auth-group.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
 import { cloneDeep } from 'lodash';
@@ -18,6 +24,8 @@ import { Repository } from 'typeorm';
 export class AuthService {
   private session: Record<string, any>;
   constructor(
+    @InjectRepository(AuthGroups)
+    private readonly authGroupsRepository: Repository<AuthGroups>,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     @Inject(CONTEXT) private context,
@@ -139,5 +147,32 @@ export class AuthService {
       ok: false,
       error: '로그인된 상태가 아닙니다.',
     });
+  }
+
+  async createAuthGroup({
+    name,
+    description,
+    level,
+    roles,
+  }: CreateAuthGroupInput): Promise<CreateAuthGroupOutput> {
+    try {
+      const exists = await this.authGroupsRepository.findOne({ name });
+      if (exists) {
+        throw new ConflictException({
+          ok: false,
+          error: '이미 존재하는 그룹입니다.',
+        });
+      }
+
+      await this.authGroupsRepository.save(
+        this.authGroupsRepository.create({ name, description, level, roles }),
+      );
+      return { ok: true };
+    } catch {
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '그룹 생성에 실패했습니다.',
+      });
+    }
   }
 }
