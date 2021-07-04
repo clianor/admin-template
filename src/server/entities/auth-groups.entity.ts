@@ -11,7 +11,7 @@ import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 export class AuthGroups extends CoreEntity {
   @IsString()
   @Field(() => String)
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @IsOptional()
