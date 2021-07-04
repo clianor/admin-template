@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
-import { AuthGroupRoles } from '@server/entities/auth-group-roles.entity';
+import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { IsOptional, IsString } from 'class-validator';
 import { Column, Entity, ManyToMany } from 'typeorm';
 
@@ -19,7 +19,7 @@ export class AuthRoles extends CoreEntity {
   @Column()
   description?: string;
 
-  @Field(() => [AuthGroupRoles])
-  @ManyToMany(() => AuthGroupRoles, (authGroupRoles) => authGroupRoles.authRole)
-  group: AuthGroupRoles[];
+  @Field(() => [AuthGroups])
+  @ManyToMany(() => AuthGroups, (authGroups) => authGroups.id)
+  group: AuthGroups[];
 }

@@ -117,7 +117,8 @@ export class UsersService {
         totalPages: Math.ceil(totalResults / limit),
         totalResults,
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException({
         ok: false,
         error: '유저를 가져오는데 실패했습니다.',

@@ -1,9 +1,9 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
-import { AuthGroupRoles } from '@server/entities/auth-group-roles.entity';
+import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @InputType('AuthGroupInputType')
 @ObjectType()
@@ -30,10 +30,10 @@ export class AuthGroups extends CoreEntity {
   @OneToMany(() => Users, (users) => users.authGroup)
   users: Users[];
 
-  @Field(() => [AuthGroupRoles], { nullable: true, defaultValue: [] })
-  @ManyToMany(
-    () => AuthGroupRoles,
-    (authGroupRoles) => authGroupRoles.authGroup,
-  )
-  roles: AuthGroupRoles[];
+  @Field(() => [AuthRoles])
+  @ManyToMany(() => AuthRoles, (authRoles) => authRoles.id, { eager: true })
+  @JoinTable({
+    name: 'auth_groups_roles',
+  })
+  roles: AuthRoles[];
 }
