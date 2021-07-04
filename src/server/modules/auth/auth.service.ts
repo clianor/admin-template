@@ -10,11 +10,16 @@ import {
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
+import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
 import {
   CreateAuthGroupInput,
   CreateAuthGroupOutput,
 } from '@server/modules/auth/dtos/create-auth-group.dto';
+import {
+  CreateAuthRoleInput,
+  CreateAuthRoleOutput,
+} from '@server/modules/auth/dtos/create-auth-role.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
 import { cloneDeep } from 'lodash';
@@ -26,6 +31,8 @@ export class AuthService {
   constructor(
     @InjectRepository(AuthGroups)
     private readonly authGroupsRepository: Repository<AuthGroups>,
+    @InjectRepository(AuthRoles)
+    private readonly authRolesRepository: Repository<AuthRoles>,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     @Inject(CONTEXT) private context,
@@ -172,6 +179,31 @@ export class AuthService {
       throw new InternalServerErrorException({
         ok: false,
         error: '그룹 생성에 실패했습니다.',
+      });
+    }
+  }
+
+  async createAuthRole({
+    name,
+    description,
+  }: CreateAuthRoleInput): Promise<CreateAuthRoleOutput> {
+    try {
+      const exists = await this.authRolesRepository.findOne({ name });
+      if (exists) {
+        throw new ConflictException({
+          ok: false,
+          error: '이미 존재하는 권한입니다.',
+        });
+      }
+
+      await this.authRolesRepository.save(
+        this.authRolesRepository.create({ name, description }),
+      );
+      return { ok: true };
+    } catch {
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '권한 생성에 실패했습니다.',
       });
     }
   }

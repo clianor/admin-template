@@ -6,6 +6,10 @@ import {
   CreateAuthGroupInput,
   CreateAuthGroupOutput,
 } from '@server/modules/auth/dtos/create-auth-group.dto';
+import {
+  CreateAuthRoleInput,
+  CreateAuthRoleOutput,
+} from '@server/modules/auth/dtos/create-auth-role.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
 import { LoggingInterceptor } from '@server/modules/logging/logging.interceptor';
@@ -30,5 +34,12 @@ export class AuthResolver {
     @Args('input') createAuthGroupInput: CreateAuthGroupInput,
   ): Promise<CreateAuthGroupOutput> {
     return this.authService.createAuthGroup(createAuthGroupInput);
+  }
+
+  @Mutation(() => CreateAuthRoleOutput)
+  createAuthRole(
+    @Args('input') createAuthRoleInput: CreateAuthRoleInput,
+  ): Promise<CreateAuthRoleOutput> {
+    return this.authService.createAuthRole(createAuthRoleInput);
   }
 }
