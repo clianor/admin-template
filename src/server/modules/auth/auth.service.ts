@@ -19,7 +19,7 @@ export class AuthService {
   private session: Record<string, any>;
   constructor(
     @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>,
+    private readonly usersRepository: Repository<Users>,
     @Inject(CONTEXT) private context,
   ) {
     this.session = context.req.session;
@@ -34,7 +34,7 @@ export class AuthService {
         });
       }
 
-      const user = await this.userRepository.findOne(
+      const user = await this.usersRepository.findOne(
         {
           email,
         },
@@ -82,7 +82,7 @@ export class AuthService {
           user.loginBlockedAt = now;
         }
 
-        this.userRepository.save(user).catch((error) => {
+        this.usersRepository.save(user).catch((error) => {
           console.error(error);
         });
 
@@ -109,7 +109,7 @@ export class AuthService {
         user.loginFailCount = 0;
       }
       user.lastLoginedAt = now;
-      this.userRepository.save(user).catch((error) => {
+      this.usersRepository.save(user).catch((error) => {
         console.error(error);
       });
 

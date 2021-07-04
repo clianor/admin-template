@@ -25,7 +25,7 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>,
+    private readonly usersRepository: Repository<Users>,
   ) {}
 
   async createUser({
@@ -34,7 +34,7 @@ export class UsersService {
   }: CreateUserInput): Promise<CreateUserOutput> {
     try {
       // 유저 존재 여부 확인.
-      const exists = await this.userRepository.findOne({ email });
+      const exists = await this.usersRepository.findOne({ email });
       if (exists) {
         throw new ConflictException({
           ok: false,
@@ -43,8 +43,8 @@ export class UsersService {
       }
 
       // 유저 생성
-      await this.userRepository.save(
-        this.userRepository.create({ email, password }),
+      await this.usersRepository.save(
+        this.usersRepository.create({ email, password }),
       );
       return { ok: true };
     } catch (error) {
@@ -66,7 +66,7 @@ export class UsersService {
     accessIP,
   }: EditProfileInput): Promise<EditProfileOutput> {
     try {
-      const user = await this.userRepository.findOne({ id: userId });
+      const user = await this.usersRepository.findOne({ id: userId });
       console.log(user);
 
       if (!user) {
@@ -88,7 +88,7 @@ export class UsersService {
         user.accessIP = accessIP;
       }
 
-      await this.userRepository.save(user);
+      await this.usersRepository.save(user);
       return { ok: true };
     } catch (error) {
       if (error instanceof HttpException) {
@@ -103,7 +103,7 @@ export class UsersService {
 
   async getUsers({ page, limit }: GetUsersInput): Promise<GetUsersOutput> {
     try {
-      const [users, totalResults] = await this.userRepository.findAndCount({
+      const [users, totalResults] = await this.usersRepository.findAndCount({
         skip: (page - 1) * limit,
         take: limit,
         order: {
