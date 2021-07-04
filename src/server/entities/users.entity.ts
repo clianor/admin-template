@@ -4,7 +4,15 @@ import CoreEntity from '@server/commons/core.entity';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import * as bcrypt from 'bcryptjs';
 import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  RelationId,
+} from 'typeorm';
 
 @InputType('UserInputType')
 @ObjectType()
@@ -42,9 +50,15 @@ export class Users extends CoreEntity {
 
   @Field(() => AuthGroups, { nullable: true })
   @ManyToOne(() => AuthGroups, (authGroups) => authGroups.id, {
+    eager: true,
     nullable: true,
   })
+  @JoinColumn()
   authGroup?: AuthGroups;
+
+  @Field(() => String, { nullable: true })
+  @RelationId((users: Users) => users.authGroup)
+  authGroupId?: string;
 
   @BeforeInsert()
   @BeforeUpdate()
