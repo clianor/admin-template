@@ -1,3 +1,5 @@
 tailwind.config.js
 postcss.config.js
 webpack-hmr.config.js
+next-env.d.ts
+src/client/__generated__

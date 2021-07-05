@@ -13,6 +13,6 @@
     "incremental": true,
     "jsx": "preserve"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/server"],
   "exclude": [".next"]
 }

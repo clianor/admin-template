@@ -113,6 +113,10 @@ export class AuthService {
         ip = ip.substr(7);
       }
 
+      if (ip === '::1') {
+        ip = '127.0.0.1';
+      }
+
       if (user.accessIP !== ip) {
         throw new UnauthorizedException({
           ok: false,
@@ -124,6 +128,7 @@ export class AuthService {
         user.loginFailCount = 0;
       }
       user.lastLoginedAt = now;
+      user.password = undefined;
       this.usersRepository.save(user).catch((error) => {
         console.error(error);
       });
