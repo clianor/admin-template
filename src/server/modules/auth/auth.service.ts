@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   Inject,
@@ -12,6 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
+import { Verifications } from '@server/entities/verifications.entity';
 import {
   CreateAuthGroupInput,
   CreateAuthGroupOutput,
@@ -22,6 +24,10 @@ import {
 } from '@server/modules/auth/dtos/create-auth-role.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
+import {
+  VerifyCodeInput,
+  VerifyCodeOutput,
+} from '@server/modules/auth/dtos/verify-code.dto';
 import { cloneDeep } from 'lodash';
 import { Repository } from 'typeorm';
 
@@ -35,6 +41,8 @@ export class AuthService {
     private readonly authRolesRepository: Repository<AuthRoles>,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    @InjectRepository(Verifications)
+    private readonly verificationsRepository: Repository<Verifications>,
     @Inject(CONTEXT) private context,
   ) {
     this.session = context.req.session;
@@ -115,7 +123,12 @@ export class AuthService {
         console.error(error);
       });
 
-      this.session.user = user;
+      this.session.verification = await this.verificationsRepository.save(
+        this.verificationsRepository.create({
+          user,
+        }),
+      );
+      // TODO: 이메일 전송 로직 필요
 
       return { ok: true };
     } catch (error) {
@@ -125,6 +138,44 @@ export class AuthService {
       throw new InternalServerErrorException({
         ok: false,
         error: '로그인에 실패했습니다.',
+      });
+    }
+  }
+
+  async verifyCode({ code }: VerifyCodeInput): Promise<VerifyCodeOutput> {
+    try {
+      if (this.session.user) {
+        throw new UnauthorizedException({
+          ok: false,
+          error: '이미 로그인되어 있습니다',
+        });
+      }
+
+      if (!this.session.verification) {
+        throw new BadRequestException({
+          ok: false,
+          error: '유효한 인증이 존재하지 않습니다.',
+        });
+      }
+      if (code !== this.session.verification.code) {
+        throw new BadRequestException({
+          ok: false,
+          error: '잘못된 코드입니다.',
+        });
+      }
+
+      this.session.user = this.session.verification.user;
+      await this.verificationsRepository.delete(this.session.verification.id);
+      delete this.session.verification;
+
+      return { ok: true };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException({
+        ok: false,
+        error: '인증에 실패했습니다.',
       });
     }
   }

@@ -12,6 +12,10 @@ import {
 } from '@server/modules/auth/dtos/create-auth-role.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
+import {
+  VerifyCodeInput,
+  VerifyCodeOutput,
+} from '@server/modules/auth/dtos/verify-code.dto';
 import { LoggingInterceptor } from '@server/modules/logging/logging.interceptor';
 
 @UseInterceptors(LoggingInterceptor)
@@ -22,6 +26,13 @@ export class AuthResolver {
   @Mutation(() => LoginOutput)
   login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.authService.login(loginInput);
+  }
+
+  @Mutation(() => VerifyCodeOutput)
+  verifyCode(
+    @Args('input') verifyCodeInput: VerifyCodeInput,
+  ): Promise<VerifyCodeOutput> {
+    return this.authService.verifyCode(verifyCodeInput);
   }
 
   @Mutation(() => LogoutOutput)
