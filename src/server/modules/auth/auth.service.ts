@@ -57,7 +57,6 @@ export class AuthService {
           select: [
             'id',
             'password',
-            'accessIP',
             'loginFailCount',
             'lastLoginedAt',
             'loginBlockedAt',
@@ -104,23 +103,6 @@ export class AuthService {
         throw new UnauthorizedException({
           ok: false,
           error: '잘못된 패스워드입니다',
-        });
-      }
-
-      const { headers, socket } = this.context.req;
-      let ip = headers['x-forwarded-for'] || socket.remoteAddress;
-      if (ip.substr(0, 7) === '::ffff:') {
-        ip = ip.substr(7);
-      }
-
-      if (ip === '::1') {
-        ip = '127.0.0.1';
-      }
-
-      if (user.accessIP !== ip) {
-        throw new UnauthorizedException({
-          ok: false,
-          error: '허용되지 않은 IP입니다.',
         });
       }
 

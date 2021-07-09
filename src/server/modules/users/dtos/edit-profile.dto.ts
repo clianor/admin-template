@@ -11,7 +11,7 @@ import { IsString } from 'class-validator';
 
 @InputType()
 export class EditProfileInput extends PartialType(
-  PickType(Users, ['email', 'password', 'accessIP']),
+  PickType(Users, ['email', 'password']),
 ) {
   @IsString()
   @Field(() => String)

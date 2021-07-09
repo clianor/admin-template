@@ -3,7 +3,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import CoreEntity from '@server/commons/core.entity';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import * as bcrypt from 'bcryptjs';
-import { IsDate, IsEmail, IsIP, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsNumber, IsString } from 'class-validator';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -27,11 +27,6 @@ export class Users extends CoreEntity {
   @Field(() => String, { nullable: true })
   @Column({ select: false })
   password: string;
-
-  @IsIP()
-  @Field(() => String, { nullable: true })
-  @Column({ length: 50, nullable: true })
-  accessIP?: string;
 
   @IsDate()
   @Field(() => Date, { nullable: true })

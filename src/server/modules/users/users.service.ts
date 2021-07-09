@@ -63,7 +63,6 @@ export class UsersService {
     userId,
     email,
     password,
-    accessIP,
   }: EditProfileInput): Promise<EditProfileOutput> {
     try {
       const user = await this.usersRepository.findOne({ id: userId });
@@ -82,10 +81,6 @@ export class UsersService {
 
       if (password) {
         user.password = password;
-      }
-
-      if (accessIP) {
-        user.accessIP = accessIP;
       }
 
       await this.usersRepository.save(user);
