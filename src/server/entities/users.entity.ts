@@ -62,7 +62,7 @@ export class Users extends CoreEntity {
       try {
         this.password = await bcrypt.hash(this.password, 10);
       } catch (error) {
-        console.log(error);
+        error;
         throw new InternalServerErrorException();
       }
     }
@@ -72,7 +72,6 @@ export class Users extends CoreEntity {
     try {
       return await bcrypt.compare(aPassword, this.password);
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException();
     }
   }

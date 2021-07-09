@@ -66,7 +66,6 @@ export class UsersService {
   }: EditProfileInput): Promise<EditProfileOutput> {
     try {
       const user = await this.usersRepository.findOne({ id: userId });
-      console.log(user);
 
       if (!user) {
         throw new NotFoundException({
@@ -113,7 +112,6 @@ export class UsersService {
         totalResults,
       };
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException({
         ok: false,
         error: '유저를 가져오는데 실패했습니다.',
