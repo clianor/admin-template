@@ -79,11 +79,12 @@ export class AuthService {
       if (user.loginBlockedAt > prevTimeAgo) {
         throw new UnauthorizedException({
           ok: false,
-          error: `${prevTimeAgo}분동안 잠긴 계정입니다.`,
+          error: `${lockedMinutes}분동안 잠긴 계정입니다.`,
         });
       }
 
       const passwordCorrect = await user.checkPassword(password);
+      user.password = undefined;
       if (!passwordCorrect) {
         if (user.loginBlockedAt) {
           user.loginBlockedAt = null;
@@ -110,7 +111,6 @@ export class AuthService {
         user.loginFailCount = 0;
       }
       user.lastLoginedAt = now;
-      user.password = undefined;
       this.usersRepository.save(user).catch((error) => {
         console.error(error);
       });
