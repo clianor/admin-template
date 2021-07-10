@@ -28,6 +28,7 @@ import {
   VerifyCodeInput,
   VerifyCodeOutput,
 } from '@server/modules/auth/dtos/verify-code.dto';
+import { MailService } from '@server/modules/mail/mail.service';
 import { cloneDeep } from 'lodash';
 import { Repository } from 'typeorm';
 
@@ -43,6 +44,7 @@ export class AuthService {
     private readonly usersRepository: Repository<Users>,
     @InjectRepository(Verifications)
     private readonly verificationsRepository: Repository<Verifications>,
+    private readonly mailService: MailService,
     @Inject(CONTEXT) private context,
   ) {
     this.session = context.req.session;
@@ -123,12 +125,18 @@ export class AuthService {
         console.error(error);
       });
 
-      this.session.verification = await this.verificationsRepository.save(
+      await this.verificationsRepository.delete({ user: { id: user.id } });
+      const verification = await this.verificationsRepository.save(
         this.verificationsRepository.create({
           user,
         }),
       );
-      // TODO: 이메일 전송 로직 필요
+      this.mailService.sendEmail({
+        to: email,
+        subject: '인증코드입니다',
+        htmlContent: `인증코드: ${verification.code}`,
+      });
+      this.session.verification = verification;
 
       return { ok: true };
     } catch (error) {
