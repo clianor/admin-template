@@ -34,8 +34,8 @@ export class AuthGuard implements CanActivate {
     const { user } = session;
 
     // 비로그인 허용
-    if (authorize === AuthorizeType.NotAuth && !user) {
-      return true;
+    if (authorize === AuthorizeType.NotAuth) {
+      return !user;
     }
 
     // Any일땐 체크하지 않음
