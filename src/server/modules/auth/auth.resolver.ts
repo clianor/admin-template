@@ -1,6 +1,7 @@
 import { UseInterceptors } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { Users } from '@server/entities/users.entity';
+import { PreAuthorize } from '@server/modules/auth/auth.decorator';
 import { AuthService } from '@server/modules/auth/auth.service';
 import {
   CreateAuthGroupInput,
@@ -23,11 +24,13 @@ import { LoggingInterceptor } from '@server/modules/logging/logging.interceptor'
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
+  @PreAuthorize('NotAuth')
   @Mutation(() => LoginOutput)
   login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.authService.login(loginInput);
   }
 
+  @PreAuthorize('NotAuth')
   @Mutation(() => VerifyCodeOutput)
   verifyCode(
     @Args('input') verifyCodeInput: VerifyCodeInput,
@@ -35,6 +38,7 @@ export class AuthResolver {
     return this.authService.verifyCode(verifyCodeInput);
   }
 
+  @PreAuthorize('Any')
   @Mutation(() => LogoutOutput)
   logout(): Promise<LogoutOutput> {
     return this.authService.logout();

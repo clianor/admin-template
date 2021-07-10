@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import {
   AllowAuthorizeType,
   AuthorizeType,
@@ -23,15 +24,20 @@ export class AuthGuard implements CanActivate {
       'authorize',
       context.getHandler(),
     );
+
     if (!authorize) {
       return true;
     }
 
+    const gqlCtx = GqlExecutionContext.create(context).getContext();
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
-    const session = request.session as Record<string, any>;
-
+    const session: Record<string, any> =
+      request?.session || gqlCtx?.session || {};
     const { user } = session;
+
+    console.log('---', session);
+    console.log('\n\n\n');
 
     // 비로그인 허용
     if (authorize === AuthorizeType.NotAuth) {
