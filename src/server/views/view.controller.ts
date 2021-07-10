@@ -1,3 +1,4 @@
+import { HomeProps } from '@client/pages/home';
 import { Controller, Get, Req, Res, Session } from '@nestjs/common';
 import { PreAuthorize } from '@server/modules/auth/auth.decorator';
 import { Request, Response } from 'express';
@@ -20,7 +21,7 @@ export class ViewController {
     @Session() session: Record<string, any>,
   ) {
     const { user } = session;
-    const serverSideProps = { email: user.email };
+    const serverSideProps: HomeProps = { email: user.email };
     await this.viewService.handler(req, res, serverSideProps);
   }
 
