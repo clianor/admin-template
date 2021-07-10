@@ -90,10 +90,13 @@ const Verify: NextPage = () => {
         />
         {error && <p className="mb-5 w-80 text-red-500">{error}</p>}
         <button
-          className="bg-green-600 hover:bg-green-900 text-white font-bold p-2 rounded w-80"
-          id="login"
+          className="bg-green-600 hover:bg-green-900 disabled:bg-green-200 disabled:cursor-not-allowed text-white font-bold p-2 rounded w-80 items-center"
           type="submit"
+          disabled={loading}
         >
+          {loading && (
+            <div className="inline-block animate-spin rounded-full h-3 w-3 mr-3 border-b-2 border-white" />
+          )}
           <span>Login</span>
         </button>
       </form>
