@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Controller, Get, Req, Res, Session } from '@nestjs/common';
 import { PreAuthorize } from '@server/modules/auth/auth.decorator';
 import { Request, Response } from 'express';
 import { ViewService } from './view.service';
@@ -14,8 +14,13 @@ export class ViewController {
 
   @PreAuthorize('Any')
   @Get('home')
-  public async showHome(@Req() req: Request, @Res() res: Response) {
-    const serverSideProps = { name: 'clianor' };
+  public async showHome(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Session() session: Record<string, any>,
+  ) {
+    const { user } = session;
+    const serverSideProps = { email: user.email };
     await this.viewService.handler(req, res, serverSideProps);
   }
 

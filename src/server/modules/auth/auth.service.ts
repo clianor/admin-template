@@ -168,11 +168,19 @@ export class AuthService {
       if (code !== this.session.verification.code) {
         throw new BadRequestException({
           ok: false,
-          error: '잘못된 코드입니다.',
+          error: '유효한 코드가 아닙니다.',
         });
       }
 
-      this.session.user = this.session.verification.user;
+      const { id } = this.session.verification.user;
+      const user = await this.usersRepository.findOne({ id });
+      if (!user) {
+        throw new NotFoundException({
+          ok: false,
+          error: '유저가 존재하지 않습니다.',
+        });
+      }
+      this.session.user = user;
       await this.verificationsRepository.delete(this.session.verification.id);
       delete this.session.verification;
 

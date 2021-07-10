@@ -5,7 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AllowAuthorizeType } from '@server/modules/auth/auth.decorator';
+import {
+  AllowAuthorizeType,
+  AuthorizeType,
+} from '@server/modules/auth/auth.decorator';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 
@@ -29,6 +32,13 @@ export class AuthGuard implements CanActivate {
     const session = request.session as Record<string, any>;
 
     const { user } = session;
+
+    // 비로그인 허용
+    if (authorize === AuthorizeType.NotAuth && !user) {
+      return true;
+    }
+
+    // Any일땐 체크하지 않음
     if (!user) {
       throw new UnauthorizedException();
     }
