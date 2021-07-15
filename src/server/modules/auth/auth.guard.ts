@@ -36,9 +36,6 @@ export class AuthGuard implements CanActivate {
       request?.session || gqlCtx?.session || {};
     const { user } = session;
 
-    console.log('---', session);
-    console.log('\n\n\n');
-
     // 비로그인 허용
     if (authorize === AuthorizeType.NotAuth) {
       return !user;
