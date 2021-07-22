@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LOCKED_MINUTES, LoginType, LOGIN_TYPE } from '@server/commons/common';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
@@ -80,16 +81,14 @@ export class AuthService {
         });
       }
 
-      const lockedMinutes = 30;
-
       const now = new Date();
       const prevTimeAgo = cloneDeep(now);
-      prevTimeAgo.setMinutes(prevTimeAgo.getMinutes() - lockedMinutes);
+      prevTimeAgo.setMinutes(prevTimeAgo.getMinutes() - LOCKED_MINUTES);
 
       if (user.loginBlockedAt > prevTimeAgo) {
         throw new UnauthorizedException({
           ok: false,
-          error: `${lockedMinutes}분동안 잠긴 계정입니다.`,
+          error: `${LOCKED_MINUTES}분동안 잠긴 계정입니다.`,
         });
       }
 
@@ -131,12 +130,19 @@ export class AuthService {
           user,
         }),
       );
-      this.mailService.sendEmail({
-        to: email,
-        subject: '인증코드입니다',
-        htmlContent: `인증코드: ${verification.code}`,
-      });
-      this.session.verification = verification;
+
+      if (LOGIN_TYPE === LoginType.Basic) {
+        this.session.user = user;
+      } else if (LOGIN_TYPE === LoginType.Mail) {
+        this.mailService.sendEmail({
+          to: email,
+          subject: '인증코드입니다',
+          htmlContent: `인증코드: ${verification.code}`,
+        });
+        this.session.verification = verification;
+      } else if (LOGIN_TYPE === LoginType.Captcha) {
+        // TODO: 캡차 구현
+      }
 
       return { ok: true };
     } catch (error) {
