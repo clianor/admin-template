@@ -67,10 +67,12 @@ export class AuthService {
         {
           select: [
             'id',
+            'email',
             'password',
             'loginFailCount',
             'lastLoginedAt',
             'loginBlockedAt',
+            'authGroup',
           ],
         },
       );
@@ -179,7 +181,19 @@ export class AuthService {
       }
 
       const { id } = this.session.verification.user;
-      const user = await this.usersRepository.findOne({ id });
+      const user = await this.usersRepository.findOne(
+        { id },
+        {
+          select: [
+            'id',
+            'email',
+            'loginFailCount',
+            'lastLoginedAt',
+            'loginBlockedAt',
+            'authGroup',
+          ],
+        },
+      );
       if (!user) {
         throw new NotFoundException({
           ok: false,
