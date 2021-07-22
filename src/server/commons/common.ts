@@ -5,4 +5,5 @@ export enum LoginType {
 }
 
 export const LOCKED_MINUTES = 30;
-export const LOGIN_TYPE: keyof typeof LoginType = LoginType.Basic;
+export const LOGIN_TYPE: keyof typeof LoginType = LoginType.Captcha;
+export const CAPTCHA_COOKIE = 'X-Capcha-Secret';

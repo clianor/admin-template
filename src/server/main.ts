@@ -35,6 +35,7 @@ declare const module: any;
         user: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
+        checkExpirationInterval: 1000 * 60 * 5, // 5분 주기로 만료된 세션 삭제
       }),
     }),
   );

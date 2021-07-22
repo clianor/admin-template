@@ -10,6 +10,7 @@
 export interface LoginInput {
   email: string;
   password?: string | null;
+  captcha?: string | null;
 }
 
 export interface VerifyCodeInput {

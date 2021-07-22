@@ -10,7 +10,12 @@ import {
 } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LOCKED_MINUTES, LoginType, LOGIN_TYPE } from '@server/commons/common';
+import {
+  CAPTCHA_COOKIE,
+  LOCKED_MINUTES,
+  LoginType,
+  LOGIN_TYPE,
+} from '@server/commons/common';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
@@ -30,7 +35,9 @@ import {
   VerifyCodeOutput,
 } from '@server/modules/auth/dtos/verify-code.dto';
 import { MailService } from '@server/modules/mail/mail.service';
+import * as bcrypt from 'bcryptjs';
 import { cloneDeep } from 'lodash';
+import * as svgCaptcha from 'svg-captcha';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -48,10 +55,23 @@ export class AuthService {
     private readonly mailService: MailService,
     @Inject(CONTEXT) private context,
   ) {
-    this.session = context.req.session;
+    this.session = context.session;
   }
 
-  async login({ email, password }: LoginInput): Promise<LoginOutput> {
+  createCaptcha() {
+    return svgCaptcha.create({
+      size: 6,
+      noise: 10,
+      height: 100,
+      width: 250,
+    });
+  }
+
+  async correctCaptcha(text: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(text, hash);
+  }
+
+  async login({ email, password, captcha }: LoginInput): Promise<LoginOutput> {
     try {
       if (this.session.user) {
         throw new UnauthorizedException({
@@ -96,7 +116,15 @@ export class AuthService {
 
       const passwordCorrect = await user.checkPassword(password);
       user.password = undefined;
-      if (!passwordCorrect) {
+
+      let captchaCorrect = true;
+      if (LOGIN_TYPE === LoginType.Captcha) {
+        const captchaCookie = this.context.cookies[CAPTCHA_COOKIE] || '';
+        captchaCorrect = await this.correctCaptcha(captcha, captchaCookie);
+        console.log(captchaCookie, captchaCorrect);
+      }
+
+      if (!passwordCorrect || !captchaCorrect) {
         if (user.loginBlockedAt) {
           user.loginBlockedAt = null;
           user.loginFailCount = 0;
@@ -133,7 +161,7 @@ export class AuthService {
         }),
       );
 
-      if (LOGIN_TYPE === LoginType.Basic) {
+      if (LOGIN_TYPE === LoginType.Basic || LOGIN_TYPE === LoginType.Captcha) {
         this.session.user = user;
       } else if (LOGIN_TYPE === LoginType.Mail) {
         this.mailService.sendEmail({
@@ -142,8 +170,6 @@ export class AuthService {
           htmlContent: `인증코드: ${verification.code}`,
         });
         this.session.verification = verification;
-      } else if (LOGIN_TYPE === LoginType.Captcha) {
-        // TODO: 캡차 구현
       }
 
       return { ok: true };
