@@ -3,8 +3,9 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
     sourceType: 'module',
+    createDefaultProgram: true,
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['react-hooks', '@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -16,12 +17,19 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', args: 'none' }],
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': ['error'],
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': ['error'],
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error', { variables: false }],
   },
 };
