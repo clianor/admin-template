@@ -13,5 +13,4 @@ export enum AuthorizeType {
 
 export type AllowAuthorizeType = keyof typeof AuthorizeType;
 
-export const PreAuthorize = (authorize: AllowAuthorizeType) =>
-  SetMetadata('authorize', authorize);
+export const PreAuthorize = (authorize: AllowAuthorizeType) => SetMetadata('authorize', authorize);

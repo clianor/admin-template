@@ -10,15 +10,7 @@ import { AuthResolver } from '@server/modules/auth/auth.resolver';
 import { AuthService } from '@server/modules/auth/auth.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      AuthGroups,
-      AuthRoles,
-      Logs,
-      Users,
-      Verifications,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([AuthGroups, AuthRoles, Logs, Users, Verifications])],
   controllers: [AuthController],
   providers: [AuthResolver, AuthService],
   exports: [AuthService],

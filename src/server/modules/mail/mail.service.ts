@@ -5,9 +5,7 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  constructor(
-    @Inject(MAIL_CONFIG_OPTIONS) private readonly options: MailModuleOptions,
-  ) {}
+  constructor(@Inject(MAIL_CONFIG_OPTIONS) private readonly options: MailModuleOptions) {}
 
   async sendEmail({ to, subject, htmlContent }): Promise<boolean> {
     try {

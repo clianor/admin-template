@@ -10,12 +10,7 @@ import {
 } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CAPTCHA_COOKIE,
-  LOCKED_MINUTES,
-  LoginType,
-  LOGIN_TYPE,
-} from '@server/commons/common';
+import { CAPTCHA_COOKIE, LOCKED_MINUTES, LoginType, LOGIN_TYPE } from '@server/commons/common';
 import { AuthGroups } from '@server/entities/auth-groups.entity';
 import { AuthRoles } from '@server/entities/auth-roles.entity';
 import { Users } from '@server/entities/users.entity';
@@ -30,10 +25,7 @@ import {
 } from '@server/modules/auth/dtos/create-auth-role.dto';
 import { LoginInput, LoginOutput } from '@server/modules/auth/dtos/login.dto';
 import { LogoutOutput } from '@server/modules/auth/dtos/logout.dto';
-import {
-  VerifyCodeInput,
-  VerifyCodeOutput,
-} from '@server/modules/auth/dtos/verify-code.dto';
+import { VerifyCodeInput, VerifyCodeOutput } from '@server/modules/auth/dtos/verify-code.dto';
 import { MailService } from '@server/modules/mail/mail.service';
 import * as bcrypt from 'bcryptjs';
 import { cloneDeep } from 'lodash';
@@ -210,14 +202,7 @@ export class AuthService {
       const user = await this.usersRepository.findOne(
         { id },
         {
-          select: [
-            'id',
-            'email',
-            'loginFailCount',
-            'lastLoginedAt',
-            'loginBlockedAt',
-            'authGroup',
-          ],
+          select: ['id', 'email', 'loginFailCount', 'lastLoginedAt', 'loginBlockedAt', 'authGroup'],
         },
       );
       if (!user) {
@@ -283,10 +268,7 @@ export class AuthService {
     }
   }
 
-  async createAuthRole({
-    name,
-    description,
-  }: CreateAuthRoleInput): Promise<CreateAuthRoleOutput> {
+  async createAuthRole({ name, description }: CreateAuthRoleInput): Promise<CreateAuthRoleOutput> {
     try {
       const exists = await this.authRolesRepository.findOne({ name });
       if (exists) {
@@ -296,9 +278,7 @@ export class AuthService {
         });
       }
 
-      await this.authRolesRepository.save(
-        this.authRolesRepository.create({ name, description }),
-      );
+      await this.authRolesRepository.save(this.authRolesRepository.create({ name, description }));
       return { ok: true };
     } catch {
       throw new InternalServerErrorException({

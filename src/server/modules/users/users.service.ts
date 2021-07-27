@@ -7,18 +7,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '@server/entities/users.entity';
-import {
-  CreateUserInput,
-  CreateUserOutput,
-} from '@server/modules/users/dtos/create-user.dto';
-import {
-  EditProfileInput,
-  EditProfileOutput,
-} from '@server/modules/users/dtos/edit-profile.dto';
-import {
-  GetUsersInput,
-  GetUsersOutput,
-} from '@server/modules/users/dtos/get-users';
+import { CreateUserInput, CreateUserOutput } from '@server/modules/users/dtos/create-user.dto';
+import { EditProfileInput, EditProfileOutput } from '@server/modules/users/dtos/edit-profile.dto';
+import { GetUsersInput, GetUsersOutput } from '@server/modules/users/dtos/get-users';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -28,10 +19,7 @@ export class UsersService {
     private readonly usersRepository: Repository<Users>,
   ) {}
 
-  async createUser({
-    email,
-    password,
-  }: CreateUserInput): Promise<CreateUserOutput> {
+  async createUser({ email, password }: CreateUserInput): Promise<CreateUserOutput> {
     try {
       // 유저 존재 여부 확인.
       const exists = await this.usersRepository.findOne({ email });
@@ -43,9 +31,7 @@ export class UsersService {
       }
 
       // 유저 생성
-      await this.usersRepository.save(
-        this.usersRepository.create({ email, password }),
-      );
+      await this.usersRepository.save(this.usersRepository.create({ email, password }));
       return { ok: true };
     } catch (error) {
       if (error instanceof HttpException) {
@@ -59,11 +45,7 @@ export class UsersService {
     }
   }
 
-  async editProfile({
-    userId,
-    email,
-    password,
-  }: EditProfileInput): Promise<EditProfileOutput> {
+  async editProfile({ userId, email, password }: EditProfileInput): Promise<EditProfileOutput> {
     try {
       const user = await this.usersRepository.findOne({ id: userId });
 

@@ -1,9 +1,7 @@
 import { isObject, keyBy, transform } from 'lodash';
 
 export const deepOmit = (obj, keysToOmit) => {
-  const keysToOmitIndex = keyBy(
-    Array.isArray(keysToOmit) ? keysToOmit : [keysToOmit],
-  );
+  const keysToOmitIndex = keyBy(Array.isArray(keysToOmit) ? keysToOmit : [keysToOmit]);
 
   const omitFromObject = (obj) => {
     return transform(obj, (result, value, key) => {

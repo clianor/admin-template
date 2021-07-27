@@ -10,11 +10,7 @@ export class ViewService implements OnModuleInit {
 
   constructor(private configService: ConfigService) {}
 
-  async handler(
-    req: Request,
-    res: Response,
-    serverSideProps?: { [key: string]: any },
-  ) {
+  async handler(req: Request, res: Response, serverSideProps?: { [key: string]: any }) {
     await this.getNextServer().render(
       req,
       res,
